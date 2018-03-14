@@ -14,7 +14,7 @@
 #include "SetOnceVariable_Template.h"
 #include "ElectromagneticSource.h"
 
-using namespace std;
+using namespace std; // [RB] jamais dans un .h!
 
 enum stringDollar_Header1{
     INFOS,

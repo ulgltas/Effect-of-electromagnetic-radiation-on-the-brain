@@ -8,6 +8,8 @@
 #include <cmath>
 
 
+// [RB] cette classe semble inutilement complexe
+
 // Small enums for the dollar strings (see InputParser::readHeader)
 stringDollar_Header1 InputParser::hashit_Header1 (std::string const& inString) {
     if (inString == "INFOS") return INFOS;
@@ -75,7 +77,7 @@ InputParser::InputParser(string file_name){
 		#endif
 		this->filename = file_name;
 		#if DEBUG > 2
-		cout << "InputParser::constructor::OUt\n";
+		cout << "InputParser::constructor::OUt\n"; // [RB] ne sert a rien - aucune chance que l'assignation ci-dessus plante
 		#endif
 }
 
@@ -157,7 +159,7 @@ void InputParser::basicParsing(const string filename){
 					this->readHeader(inputFile,currentLine);
 				}
 			}
-		}else{
+		}else{ // [RB] ??????
 			cout << "InputParser::basicParsing::Should not end up here !";
 			cout << " Complain to the developer.\n";
 			cout << "Aborting.\n";

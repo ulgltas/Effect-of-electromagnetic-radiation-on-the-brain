@@ -42,6 +42,8 @@ MPI_Initializer::MPI_Initializer(int argc, char *argv[],int required){
 			}
 		}
 	}
+    // [RB] j'ai l'impression qu'on va faire de l'appel MPI multithread 
+    // [RB] (chaque thread d'un process MPI va faire des appels MPI simultanément)
 	
 	// Get the ID of the MPI process:
 	int ID_MPI_Process = INT_MIN;

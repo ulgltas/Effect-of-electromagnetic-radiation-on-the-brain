@@ -14,9 +14,9 @@ class GridCreator_NEW;
 using namespace std;
 
 // ID of the root processor:
-const int ROOT_PROCESSOR = 0;
+const int ROOT_PROCESSOR = 0;   //[RB] ca marcherait si ROOT_PROCESSOR=1? 
 
-class MPI_Initializer{
+class MPI_Initializer{    //[RB] Pourquoi "..Initializer"? 
 	private:
 		// Level of provided thread support:
 		SetOnceVariable_Template<int> provided;

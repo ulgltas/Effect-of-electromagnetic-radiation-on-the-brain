@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 
-project (Effect-of-electromagnetic-radiation-on-the-brain CXX)
+project (Effect-of-electromagnetic-radiation-on-the-brain CXX) # [RB] nom de projet (et de repository) trop long
 
 include(CheckCXXCompilerFlag)
 
@@ -16,12 +16,12 @@ check_cxx_compiler_flag("-std=c++11" STDCXX11)
   endif(STDCXX11)
 
 # ADDING OPTIMIZATION:
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Ofast -Wall -Wextra")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -frerun-loop-opt -fexpensive-optimizations")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdelayed-branch -funroll-loops")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Ofast -Wall -Wextra")# [RB] inutile!!
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -frerun-loop-opt -fexpensive-optimizations")# [RB] inutile!!
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdelayed-branch -funroll-loops") # [RB] provoque des warnings!!
 
 # ADDING WARNINGS
-if(MSVC)
+if(MSVC)  # [RB] inutile!!
     # Force to always compile with W4
     if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
     string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -30,7 +30,7 @@ if(MSVC)
     endif()
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   # Update if necessary
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic") # [RB] provoque trop de warnings
 endif()
 
 

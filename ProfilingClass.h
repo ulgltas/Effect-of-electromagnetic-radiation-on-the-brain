@@ -12,6 +12,8 @@
 #include <iostream>
 #include "SetOnceVariable_Template.h"
 
+// [RB] cette classe est inutilement complexe
+
 class ProfilingClass{
     private:
         // Used memory:
@@ -23,7 +25,7 @@ class ProfilingClass{
 
         // File for output:
         std::ofstream outputFile;
-        std::string   outputFileName = std::string();
+        std::string   outputFileName = std::string(); // [RB] ? et pq pas un SetOnceVariable_Template?
 
         // Program starting time:
         SetOnceVariable_Template<std::time_t> program_starting_time;

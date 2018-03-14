@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
 	omp_set_nested(1);
 	//////////////////
 
-	/* SET OMP_DYNAMIC */
+	/* SET OMP_DYNAMIC */ // [RB] ce gros bloc me semble inutile
 	if(const char *omp_dynamic_env = std::getenv("OMP_DYNAMIC")){
 		// Already declared. Check it is false.
 		if(std::strcmp(omp_dynamic_env,"false") == 0){
@@ -113,10 +113,10 @@ int main(int argc, char *argv[]){
 	if(PARALLELISM_OMP_ENABLED)
 		cout << "OMP enabled.\n";
 	
-	omp_set_num_threads(6);
+	omp_set_num_threads(6); // [RB] quid si PARALLELISM_OMP_ENABLED==false?
 	
 	cout << "Calling input file parser...\n";
-	string filenameInput = "TESTS/testSourceCenteredInCube.input";
+	string filenameInput = "TESTS/testSourceCenteredInCube.input"; // [RB] a parametrer!! contraste avec la complexité de la classe InputParser
 	InputParser input_parser;
 	input_parser.defaultParsingFromFile(filenameInput);
 	cout << "INPUT PARSER HAS FINISHED HIS JOBS." << endl;

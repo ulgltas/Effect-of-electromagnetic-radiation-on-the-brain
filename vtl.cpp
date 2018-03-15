@@ -33,7 +33,7 @@ const bool isCpuLittleEndian = 1 == *(char *)(&__one__); // CPU endianness
 
 /**
  * @brief Check that nested omp region is enabled to speed up the buffer filling during writing.
- * 
+ *          [RB] ne JAMAIS optimiser avant que ça marche!!!!!!
  * Custom function to ensure that nested parallel regions are enabled.
  * 
  */
@@ -49,7 +49,7 @@ void check_omp_nested_enabled(void){
 			printf("OMP_NESTED=%s.\n",std::getenv("OMP_NESTED"));
 		}
 	}else{
-		// OMP_DYNAMIC was not declared. Declare it.
+		// OMP_DYNAMIC was not declared. Declare it.  // [RB] commentaire faux => copié/collé
 		std::string set_env = "OMP_NESTED=true";
 		putenv(&set_env[0]);
 		printf("OMP_NESTED=%s.\n",std::getenv("OMP_NESTED"));
@@ -274,6 +274,11 @@ size_t write_vectorXML(std::ofstream &f, std::vector<double> const &pos, bool us
     return written;
 }
 
+// [RB] ma routine generale (independante du type de probleme et de MPI)
+// est devenue particuliere, c'est dommage.
+// Tout ceci vient du fait qu'on utilise une structure de données (GridCreator) très rigide et non extensible
+// dans laquelle on doit aller rechercher explicitement les grandeurs à sauver.
+
 size_t write_vectorXML_custom_GridCreatorNew(
     std::ofstream &f, 
     GridCreator_NEW &grid, 
@@ -348,6 +353,8 @@ size_t write_vectorXML_custom_GridCreatorNew(
 
             size_t I,J,K;
 
+            // [RB] ce qui suit sont des gros copiés/collés
+            // [RB] inutile d'utiliser openmp ici (ca ne peut qu'engendrer des problemes!)
 
             // EX field:
             #pragma omp private(index,I,J,K,buff_index) shared(grid,buffer) for schedule(static) 
@@ -404,7 +411,7 @@ size_t write_vectorXML_custom_GridCreatorNew(
 
             std::vector<size_t> size = grid.sizes_EH;
 
-            std::cout << "\n\t>>> Writing VTI electric field...\n";
+            std::cout << "\n\t>>> Writing VTI magnetic field...\n";
 
             // Get the sizes:
             // Hx of size M × (N − 1) × (P − 1)
@@ -420,6 +427,9 @@ size_t write_vectorXML_custom_GridCreatorNew(
             size_t buff_index = 0;
 
             size_t I,J,K;
+
+            // [RB] ce qui suit sont des gros copiés/collés
+            // [RB] inutile d'utiliser openmp ici (ca ne peut qu'engendrer des problemes!)
 
             // HX field:
             #pragma omp private(index,I,J,K,buff_index) shared(grid,buffer) for schedule(static) 

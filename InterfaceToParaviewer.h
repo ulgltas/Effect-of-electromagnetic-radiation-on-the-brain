@@ -10,6 +10,9 @@
 
 #include <cstring>
 
+// [RB] cette classe n'est pas une "interface to paraview"
+// c'est un gros conteneur qui contient tout.
+
 class InterfaceToParaviewer{
     private:
         // Reference to a GridCreator object:

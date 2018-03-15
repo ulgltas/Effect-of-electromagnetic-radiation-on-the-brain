@@ -2,6 +2,9 @@
 /* That is, when it has been set once, it can never be changed.         */
 
 // [RB] quel est l'interet de cette classe?
+// apres reflexion, ce genre de classe n'apporte rien et empeche 
+// les autres membres du groupe (et moi)
+// de comprendre facilement le reste du code
 
 #ifndef SETONCEVARIABLE_TEMPLATE_H
 #define SETONCEVARIABLE_TEMPLATE_H

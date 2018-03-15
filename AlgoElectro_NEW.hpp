@@ -1,6 +1,9 @@
 #ifndef ALGOELECTRO_NEW_HPP
 #define ALGOELECTRO_NEW_HPP
 
+// [RB] ne pas utiliser .hpp mais .h 
+// (c'est la norme - hpp étant réservé pour l'implémentation de templates)
+
 #include "GridCreator_NEW.h"
 
 #include "InterfaceToParaviewer.h"
@@ -17,13 +20,13 @@ class AlgoElectro_NEW{
     public:
 
         /* CONSTRUCTOR */
-        AlgoElectro_NEW(void){}
+        AlgoElectro_NEW(void){}   // [RB] "void" ne sert a rien
 
         /* DESTRUCTOR  */
         ~AlgoElectro_NEW(void){}
 
         /* Update function */
-        void update(GridCreator_NEW &,InterfaceToParaviewer &);
+        void update(GridCreator_NEW &,InterfaceToParaviewer &); // [RB] les noms de variables servent, eux!
 
         // Check that OMP_DYNAMIC is set to false:
         void check_OMP_DYNAMIC_envVar(void);

@@ -162,6 +162,9 @@ void AlgoElectro::update(GridCreator &mesh, InterfaceToParaviewer& interfaceForO
     /// BEGINNING OF THE OPENMP REGION ///
     //////////////////////////////////////
     
+    // [RB] chaque process MPI a minimum 6 threads et les communications avec 
+    // les potentiels 6 voisins vont de faire simultanément.
+
     #pragma omp parallel default(shared) \
         shared(deltaX,deltaY,deltaZ)\
         shared(mesh,interfaceForOutput)\

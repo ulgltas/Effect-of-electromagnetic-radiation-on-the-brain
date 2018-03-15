@@ -115,7 +115,7 @@ void GridCreator::assignToEachNodeAMaterial(void){
 				}
 			}
 		}
-		printf("At node(5,5,5) we have material %d.\n",this->nodesElec(0,0,0).material);
+		printf("At node(5,5,5) we have material %d.\n",this->nodesElec(0,0,0).material); // [RB] ????
 		cout << "This corresponds to " + 
 			this->materials.materialName_FromMaterialID[this->nodesElec(0,0,0).material];
 		cout << endl;
@@ -191,7 +191,7 @@ GridCreator::GridCreator(InputParser &input_parser,
 }
 		
 /* Destructor */
-GridCreator::~GridCreator(void){
+GridCreator::~GridCreator(void){   // [RB] inutile!
 	cout << "Destructor of Grid creator ok.\n";
 }
 

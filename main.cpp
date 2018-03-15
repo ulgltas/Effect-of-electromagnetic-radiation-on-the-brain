@@ -151,7 +151,7 @@ int main(int argc, char *argv[]){
 	
 	MPI_Barrier(MPI_COMM_WORLD);
 	
-
+    // [RB] Pourquoi a t on un "GridCreator" et un "GridCreator_NEW" en même temps??
 	GridCreator_NEW gridTest(input_parser,allMat,MPI_communicator,profiler);
 	cout << "Mesh init\n";
 	gridTest.meshInitialization();
@@ -163,7 +163,7 @@ int main(int argc, char *argv[]){
 	interfaceToWriteOutput.convertAndWriteData(0,"THERMAL");
 	interfaceToWriteOutput.convertAndWriteData(0,"ELECTRO");
 
-	printf("ABORTING IN MAIN LINE 157\n");
+	printf("ABORTING IN MAIN LINE 157\n"); // [RB] ??????
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	printf("\n\nMPI %d : Ex(%zu,%zu,%zu) | Ey(%zu,%zu,%zu) | Ez(%zu,%zu,%zu)"
@@ -197,7 +197,7 @@ int main(int argc, char *argv[]){
 	
 	//algoElectromagn.update(mesher,interfaceToWriteOutput);
 	
-	AlgoElectro_NEW algoElectro_newTst;
+	AlgoElectro_NEW algoElectro_newTst;  // [RB] pourquoi pas "algo" tout court? => lisibilité!!
 	algoElectro_newTst.update(gridTest,interfaceToWriteOutput);
 	
 	cout << "Calling all the destructors.\n";

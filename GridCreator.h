@@ -67,7 +67,7 @@ class GridCreator{
 					materials(materials),
 					MPI_communicator(MPI_communicator){}*/;
 		// Destructor:
-		~GridCreator(void);
+		~GridCreator(void); // [RB] inutile!
 	
 		// Grid initialization:
 		void meshInitialization();

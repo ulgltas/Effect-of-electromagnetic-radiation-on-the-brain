@@ -13,6 +13,9 @@
 #include "SetOnceVariable_Template.h"
 
 // [RB] cette classe est inutilement complexe
+// => ces infos stockées dans cette classe sont disponibles avec un "time" ou via
+// le systeme de queues de NIC4. 
+// C'est le genre de chose à implémenter lorsque le code fonctionne (si nécessaire).
 
 class ProfilingClass{
     private:
@@ -25,7 +28,7 @@ class ProfilingClass{
 
         // File for output:
         std::ofstream outputFile;
-        std::string   outputFileName = std::string(); // [RB] ? et pq pas un SetOnceVariable_Template?
+        std::string   outputFileName = std::string(); // [RB] ? et pq pas un SetOnceVariable_Template tant qu'on y est?
 
         // Program starting time:
         SetOnceVariable_Template<std::time_t> program_starting_time;

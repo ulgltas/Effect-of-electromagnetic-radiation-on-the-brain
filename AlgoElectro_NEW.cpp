@@ -72,7 +72,7 @@ void AlgoElectro_NEW::update(
 
     // Start clock for monitoring CPU time:
     double start_algo_update;
-    double end___algo_update;
+    double end___algo_update; // [RB] non
     grid.profiler.addTimingInputToDictionnary("AlgoElectro_NEW_UPDATE_omp_get_wtime");
     start_algo_update = omp_get_wtime();
 
@@ -419,7 +419,7 @@ void AlgoElectro_NEW::update(
         shared(C_exe,C_exh_1,C_exh_2)\
         shared(C_eye,C_eyh_1,C_eyh_2)\
         shared(C_eze,C_ezh_1,C_ezh_2)
-        //shared(ompi_mpi_comm_world,ompi_mpi_int)
+        //shared(ompi_mpi_comm_world,ompi_mpi_int) // [RB] pas portable
     {
         size_t index;
         size_t index_1Plus;

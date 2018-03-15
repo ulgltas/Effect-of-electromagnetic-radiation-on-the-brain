@@ -1226,7 +1226,7 @@ VTL_API void vtl::export_spoints_XMLP(std::string const &filename,
     if(filename.find("THERMAL") != std::string::npos){
         std::cout << ">>> PVTI :: THERMAL :: IN" << std::endl;
         if(mygrid.scalars.size() == 0){
-            fprintf(stderr,"mygrid.vectors.size() == %d\n",mygrid.vectors.size());
+            //fprintf(stderr,"mygrid.vectors.size() == %d\n",mygrid.vectors.size());
             fprintf(stderr,"mygrid.scalars.size() == 0 :: ABORTING\n");
             fprintf(stderr,"File %s:%d\n",__FILE__,__LINE__);
             abort();

@@ -406,7 +406,7 @@ void AlgoElectro_NEW::update(
 
     double parallelRegionStartingTime = omp_get_wtime();
 
-    #pragma omp parallel num_threads(omp_get_max_threads()) default(none)\
+    #pragma omp parallel num_threads(omp_get_max_threads()) default(shared)\
         shared(grid,dt,current_time,currentStep)\
         shared(local_nodes_inside_source_NUMBER)\
         shared(interfaceParaview)\

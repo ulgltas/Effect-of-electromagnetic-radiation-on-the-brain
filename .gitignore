@@ -19,7 +19,7 @@
 *.tiff
 #
 build/*
-TESTS/*
+#TESTS/*
 .vscode/*
 vscode/*
 #

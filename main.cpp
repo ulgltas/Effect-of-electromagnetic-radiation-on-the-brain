@@ -67,6 +67,14 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
+
+	// [RB] reading input file name
+	if(argc!=2)
+	{
+		std::cout << "usage:" << argv[0] << " test.input\n"; 
+		return 0;
+	}
+
 	//////////////////
 	/**
 	 * Super important for speed of output writing !
@@ -116,7 +124,7 @@ int main(int argc, char *argv[]){
 	omp_set_num_threads(6); // [RB] quid si PARALLELISM_OMP_ENABLED==false?
 	
 	cout << "Calling input file parser...\n";
-	string filenameInput = "TESTS/testSourceCenteredInCube.input"; // [RB] a parametrer!! contraste avec la complexité de la classe InputParser
+	string filenameInput = std::string(argv[1]); //"TESTS/testSourceCenteredInCube.input";
 	InputParser input_parser;
 	input_parser.defaultParsingFromFile(filenameInput);
 	cout << "INPUT PARSER HAS FINISHED HIS JOBS." << endl;

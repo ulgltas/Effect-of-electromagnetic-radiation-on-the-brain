@@ -13,7 +13,11 @@
 ::   mkdir build
 ::   cd build
 ::   cmake -G "MinGW Makefiles" ..
+::     ou
+::   cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug ..
 ::   mingw32-make -j 6
+::     ou
+::   cmake --build . -- -j6
 ::   mpiexec -n 6 bin\fdtd_mpi
 ::
 :: nettoyer "build" sous windows:

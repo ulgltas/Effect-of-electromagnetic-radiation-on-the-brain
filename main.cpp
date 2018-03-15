@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
 	
 	/* The variable allMat will store the materials' properties */
 	Materials allMat;
-	allMat.getPropertiesFromFile("data_air.csv");//MaterialProperties.csv
+	allMat.getPropertiesFromFile("../data_air.csv");//MaterialProperties.csv
 	allMat.printAllProperties();
 	cout << "Print number of temp per mat::IN" << endl;
 	allMat.printNumberOfTempLinePerMat();

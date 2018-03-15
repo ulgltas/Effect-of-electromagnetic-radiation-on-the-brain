@@ -2,6 +2,8 @@
 #ifndef ALGO_ELECTRO_H //
 #define ALGO_ELECTRO_H
 
+#define _USE_MATH_DEFINES // otherwise, M_PI undefined in VS
+#include <math.h>
 
 #include <cstdio>
 #include <iostream>

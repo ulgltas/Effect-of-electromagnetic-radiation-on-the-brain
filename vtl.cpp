@@ -589,8 +589,8 @@ size_t write_vectorXML_custom(
                         buffer[counter++] = (float)grid.nodesElec(I,J,K).field[0];
                         buffer[counter++] = (float)grid.nodesElec(I,J,K).field[1];
                         buffer[counter++] = (float)grid.nodesElec(I,J,K).field[2];
-                        unsigned long local[3] = {I,J,K};
-                        unsigned long global[3] = {0,0,0};
+                        unsigned long local[3] = {(unsigned long)I,(unsigned long)J,(unsigned long)K};
+                        unsigned long global[3] = {0,0,0}; // [RB] !!size_t n'est pas tjs unsigned long!!
                         grid.LocalToGlobal(local,global);
                         /*printf(">> ELEC(%ld,%ld,%ld) is (%f,%f,%f).\n",global[0],
                             global[1],global[2],

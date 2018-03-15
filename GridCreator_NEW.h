@@ -1,6 +1,9 @@
 #ifndef GRIDCREATOR_NEW_H
 #define GRIDCREATOR_NEW_H
 
+#define _USE_MATH_DEFINES // otherwise, M_PI undefined in VS
+#include <math.h>
+
 #include <vector>
 #include <cstdio>
 

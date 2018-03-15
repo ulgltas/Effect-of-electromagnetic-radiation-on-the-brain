@@ -418,8 +418,8 @@ void AlgoElectro_NEW::update(
         shared(C_hzh,C_hze_1,C_hze_2)\
         shared(C_exe,C_exh_1,C_exh_2)\
         shared(C_eye,C_eyh_1,C_eyh_2)\
-        shared(C_eze,C_ezh_1,C_ezh_2)\
-        shared(ompi_mpi_comm_world,ompi_mpi_int)
+        shared(C_eze,C_ezh_1,C_ezh_2)
+        //shared(ompi_mpi_comm_world,ompi_mpi_int)
     {
         size_t index;
         size_t index_1Plus;

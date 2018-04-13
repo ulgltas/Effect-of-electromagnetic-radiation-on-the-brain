@@ -12,16 +12,22 @@
 #include <iostream>
 #include "SetOnceVariable_Template.h"
 
+#include "MemoryUsage.hpp"
+
+#include "header_with_all_defines.hpp"
+
 // [RB] cette classe est inutilement complexe
 // => ces infos stockées dans cette classe sont disponibles avec un "time" ou via
 // le systeme de queues de NIC4. 
 // C'est le genre de chose à implémenter lorsque le code fonctionne (si nécessaire).
 
+
+
 class ProfilingClass{
     private:
-        // Used memory:
-        double usedMemoryInMegaBytes = 0.0;
-        double peakUsedMemoryInMegaBytes = 0.0;
+
+        size_t mem_usage_peak_rss_mega_bytes = 0;
+        size_t total_mem_usage_peak_rss_mega_bytes_all_mpi = 0;
         
         // Dictionnary for arbitrary time input:
         std::map<std::string,double> time_taken_for;
@@ -37,26 +43,35 @@ class ProfilingClass{
         // Constructor:
         ProfilingClass(void){this->set_program_starting_time();}
         // Destructor:
-        ~ProfilingClass(void);
+        ~ProfilingClass(void){}
 
         // Set program starting time:
         void set_program_starting_time();
 
-        // Adding memory usage:
-        void addMemoryUsage(std::string,double);
-
         // Add a timing input:
-        void addTimingInputToDictionnary(std::string);
+        void addTimingInputToDictionnary(
+            std::string,
+            bool try_and_do_nothing_if_exist = true
+        );
 
         // Increment a timing input:
         void incrementTimingInput(std::string, double);
 
+        // Get the time of an input:
+        double getTimingInput(std::string);
+
         // Set the output file's name:
         void setOutputFileName(std::string);
 
-        // Remove some memory usage:
-        void removeMemoryUsage(std::string type, double mem,
-                        std::string senderMessage = std::string());
+        void gatherMemoryUsageMPI(void);
+
+        void storePeakMemoryUsage(size_t MEM_IN_MEGA_BYTES);
+
+        void probeMaxRSS(void){
+            this->mem_usage_peak_rss_mega_bytes = getPeakRSS()/1E6;
+        }
+
+        void writeToOutputFile(void);
 
 };
 

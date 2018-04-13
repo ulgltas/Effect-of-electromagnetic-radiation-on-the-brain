@@ -12,12 +12,23 @@
 #include "InputParser.h"
 #include "ProfilingClass.h"
 
-#include "vtl.h"
-#include "vtlVec3.h"
-#include "vtlSPoints.h" 
+#include "vtl_romin/vtl_romin.h"
+#include "vtl_romin/vtlVec3_romin.h"
+#include "vtl_romin/vtlSPoints_romin.h" 
+
+enum Geometrical_Forms
+{
+    SPHERES,
+    CUBES,
+    DEFAULT
+};
+
+Geometrical_Forms enum_for_geometrical_forms(std::string const &str);
 
 class MPI_Initializer;
 class GridCreator_NEW{
+	private:
+		unsigned int VERBOSITY = 0;
     public:
 
         const size_t DECALAGE_A_LA_MAIN = 0;
@@ -115,13 +126,14 @@ class GridCreator_NEW{
         std::vector<size_t> originIndices_Thermal = {0,0,0};
 
         // Origin of the whole simulation, for EM and TH grids:
-		vtl::Vec3d originOfWholeSimulation_Electro = vtl::Vec3d(0.0,0.0,0.0);
-        vtl::Vec3d originOfWholeSimulation_Thermal = vtl::Vec3d(0.0,0.0,0.0);
+		vtl_romin::Vec3d originOfWholeSimulation_Electro = vtl_romin::Vec3d(0.0,0.0,0.0);
+        vtl_romin::Vec3d originOfWholeSimulation_Thermal = vtl_romin::Vec3d(0.0,0.0,0.0);
 
         /* FUNCTIONS */
 
         // Constructor:
-        GridCreator_NEW(InputParser &input_parser,
+        GridCreator_NEW(unsigned int VERBOSITY,
+						InputParser &input_parser,
 					    Materials &materials,
 					    MPI_Initializer &MPI_communicator,
                         ProfilingClass &profiler);
@@ -151,8 +163,62 @@ class GridCreator_NEW{
                 std::vector<size_t>        &local_nodes_inside_source_NUMBER,
                 std::vector<unsigned char> &ID_Source,
                 std::vector<double>        &local_nodes_inside_source_FREQ,
-                size_t                     *nbr_nodes_inside_source,
                 const std::string          &TYPE_OF_FIELD
             );
+
+        bool is_global_inside_me(
+            size_t nbr_X_gl,
+            size_t nbr_Y_gl,
+            size_t nbr_Z_gl
+        );
+
+
+        double* get_fields(std::string &key){
+            if(key == "Ex")
+                return this->E_x;
+            else if(key == "Ey")
+                return this->E_y;
+            else if(key == "Ez")
+                return this->E_z;
+            else
+                DISPLAY_ERROR_ABORT(
+                    "No field corresponding to %s.",key.c_str()
+                );
+            return NULL;
+        }
+
+        std::vector<size_t> get_fields_size(std::string &key){
+            if(key == "size_Ex")
+                return this->size_Ex;
+            if(key == "size_Ey")
+                return this->size_Ey;
+            if(key == "size_Ez")
+                return this->size_Ez;
+            else
+                DISPLAY_ERROR_ABORT(
+                    "No field size crresponding to %s.",key.c_str()
+                );
+            std::vector<size_t> empty(1);
+            return empty;
+        }
+
+        void get_local_from_global_electro(
+            const size_t nbr_X_gl ,const size_t nbr_Y_gl ,const size_t nbr_Z_gl,
+            size_t *nbr_X_loc     ,size_t *nbr_Y_loc     ,size_t *nbr_Z_loc,
+            bool *is_ok
+        );
+
+        void fillIn_material_with_geometry_file(void);
+
+        void fillInMat_forms(
+            const size_t numberOf,
+            std::vector<double> const &radius,
+            std::vector<double> const &centers,
+            std::vector<std::string> const &material_inside,
+            std::string type_form
+        );
+
+        void Display_size_fields(void);
 };
+
 #endif

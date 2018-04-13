@@ -14,22 +14,48 @@
 #include "SetOnceVariable_Template.h"
 #include "ElectromagneticSource.h"
 
+#include "header_with_all_defines.hpp"
+
+#include <boost/filesystem.hpp>
+
+#include <UTILS/directory_searching.hpp>
+
 using namespace std; // [RB] jamais dans un .h!
+
+typedef struct probed_point{
+	std::string type_field;
+	std::vector<double> coordinates;
+	std::string at_which_time;
+	std::string filename;
+}probed_point;
+
+typedef struct probed_line{
+	std::string type_field;
+	std::vector<double> coords;
+	std::string filename;
+}probed_line;
 
 enum stringDollar_Header1{
     INFOS,
 	MESH,
-	RUN_INFOS
+	RUN_INFOS,
+	POST_PROCESSING
 };
 enum stringDollar_Header2{
 	NAME,
+	REMOVE_EXISTING_FILES,
 	DELTAS,
 	DOMAIN_SIZE,
 	SOURCE,
+	TIME_STEP,
+	OUTPUT_SAVING,
 	STOP_SIMUL_AFTER,
 	TEMP_INIT,
+	BOUNDARY_CONDITIONS,
 	MATERIALS,
-	ORIGINS
+	ORIGINS,
+	PROBING_POINTS,
+	ELECTRO_STEADY_STATE
 };
 
 class InputParser{
@@ -37,9 +63,9 @@ class InputParser{
 		// File name of the input file. Should be a .input file.
 		string filename;
 		// Check a file exists:
-		bool is_file_exist(const string filename);
+		bool is_file_exist(const string &filename);
 		// Parsing function:
-		void basicParsing(const string filename);
+		void basicParsing(const string &filename);
 		// Check that the line is not a comment:
 		bool checkLineISNotComment(ifstream &, string &);
 		// Read header 1:
@@ -55,9 +81,10 @@ class InputParser{
 			std::string,
 			size_t size_to_verify_for = 0 );
 
-		void readHeader_INFOS(ifstream &file);
-		void readHeader_MESH (ifstream &file);
-		void readHeader_RUN_INFOS(ifstream &file);
+		void readHeader_INFOS          (ifstream &file);
+		void readHeader_MESH           (ifstream &file);
+		void readHeader_RUN_INFOS      (ifstream &file);
+		void readHeader_POST_PROCESSING(ifstream &file);
 
 		void RemoveAnyBlankSpaceInStr(std::string &);
 
@@ -75,6 +102,38 @@ class InputParser{
 		// Contains error, output and profiling files:
 		map<std::string,std::string> outputNames;
 	public:
+		/// Directory containing all material data files:
+		boost::filesystem::path material_data_directory;
+		/// File containing geometry parameters:
+		std::string file_containing_geometry = std::string();
+
+		/// Probed points:
+		std::vector<probed_point> points_to_be_probed;
+		
+		/// Probed lines:
+		std::vector<probed_line> lines_to_be_probed;
+
+		/// Linked to the source behaviour:
+		std::vector<std::string> source_time;
+
+		/// Name of the file containing the materials' data:
+		std::vector<std::string> material_data_files;
+		
+		/**
+		 * Either 'dipole' or 'simple'
+		 */		
+		std::vector<std::string> conditionsInsideSources;
+
+		// Thermal algorithm time step:
+		double thermal_algo_time_step = -1;
+
+		// Sampling frequency for the electromagnetic algorithm:
+		size_t SAMPLING_FREQ_ELECTRO = 0;
+		// Sampling frequency for the thermal algorithm:
+		size_t SAMPLING_FREQ_THERMAL = 0;
+
+		// Dictionary for delete operations before computing anything:
+		map<std::string,bool> removeWhat_dico;
 
 		// Origin of the grids:
 		std::vector<double> origin_Electro_grid = {0,0,0};
@@ -96,16 +155,17 @@ class InputParser{
 		ElectromagneticSource source;
 
 		// Default constructor:
-		InputParser(){};
+		int MPI_rank = 0;
+		InputParser(int MPI_rank){this->MPI_rank = MPI_rank;};
 		// Constructor:
 		InputParser(string file_name);
 		// Destructor:
 		~InputParser(void){};
 		
 		// Default parser, using the field 'filename' of the class:
-		void defaultParsingFromFile(void);
+		void defaultParsingFromFile(int MPI_RANK = 0);
 		// Parser:
-		void defaultParsingFromFile(string filename);
+		void defaultParsingFromFile(std::string &filename,int MPI_RANK = 0);
 		// Get lengths
 		double get_length_WholeDomain(
 			unsigned int /*DIRECTION 0, 1 or 2*/,
@@ -145,8 +205,16 @@ class InputParser{
 		double lengthZ_WholeDomain_Thermal = 0.0;
 
 		size_t maxStepsForOneCycleOfElectro = 0;
+		size_t maxStepsForOneCycleOfThermal = 0;
 
 		std::map<std::string,std::string> TEST_PARAVIEW_MPI_ARGS;
+
+		void deleteFiles(int MPI_RANK = 0);
+
+		/// Boundary conditions for the thermal algorithm.
+		/// Example: access BC type of face 0 by THERMAL_FACE_BC_TYPE[0].
+		map<size_t,std::string> THERMAL_FACE_BC_TYPE;
+		map<size_t,double>      THERMAL_FACE_BC_VALUE;
 };
 
 #endif

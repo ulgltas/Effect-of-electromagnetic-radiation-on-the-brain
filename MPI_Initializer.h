@@ -6,7 +6,7 @@
 #include <mpi.h>
 #include <limits.h>
 #include "SetOnceVariable_Template.h"
-#include "GridCreator.h"
+
 #include "GridCreator_NEW.h"
 
 class GridCreator_NEW;
@@ -27,6 +27,11 @@ class MPI_Initializer{    //[RB] Pourquoi "..Initializer"?
 		// Number of MPI processes:
 		SetOnceVariable_Template<int> number_of_MPI_Processes;
 	public:
+		/// Get provided thread support:
+		int get_provided_thread_support(void){
+			return this->provided.get();
+		}
+		/// Definition of the root process rank:
 		const int rootProcess = ROOT_PROCESSOR;
 		// Rank of the MPI neighboors:
 		int RankNeighbour[6];
@@ -51,11 +56,8 @@ class MPI_Initializer{    //[RB] Pourquoi "..Initializer"?
 			}
 		}
 
-		void MpiDivision(GridCreator &);
-
 		void MPI_DIVISION(GridCreator_NEW & /*subgrid*/);
 
-		bool SendDataToNeighboor(double *,size_t,unsigned char);
 
 		//////////////////////////////////////////////////////
 		/// TO WRITE OUTPUT FILES, WE'LL NEED MPI POSITION ///
@@ -77,6 +79,7 @@ class MPI_Initializer{    //[RB] Pourquoi "..Initializer"?
 			= {false,false,false};
 		std::vector<bool> must_add_one_to_H_Z_along_XYZ
 			= {false,false,false};
+
 
 };
 

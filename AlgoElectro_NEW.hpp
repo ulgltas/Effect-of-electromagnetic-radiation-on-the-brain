@@ -6,11 +6,16 @@
 
 #include "GridCreator_NEW.h"
 
+#include <float.h>
+#include <limits.h>
+
+
 #include "InterfaceToParaviewer.h"
 
 class AlgoElectro_NEW{
     private:
         /* MEMBERS */
+		unsigned int VERBOSITY = 0;
         
         /* FUNCTIONS */
 
@@ -20,7 +25,9 @@ class AlgoElectro_NEW{
     public:
 
         /* CONSTRUCTOR */
-        AlgoElectro_NEW(void){}   // [RB] "void" ne sert a rien
+        AlgoElectro_NEW(unsigned int VERBOSITY){
+			this->VERBOSITY = VERBOSITY;
+		}
 
         /* DESTRUCTOR  */
         ~AlgoElectro_NEW(void){}
@@ -28,8 +35,23 @@ class AlgoElectro_NEW{
         /* Update function */
         void update(GridCreator_NEW &,InterfaceToParaviewer &); // [RB] les noms de variables servent, eux!
 
+
         // Check that OMP_DYNAMIC is set to false:
         void check_OMP_DYNAMIC_envVar(void);
+
+
+        /* Update the points with boundary conditions  */
+        void abc( GridCreator_NEW &grid, 
+                double *Ex, double *Ey, double *Ez,
+                double *Eyx0, double *Ezx0, 
+                double *Eyx1, double *Ezx1, 
+                double *Exy0, double *Ezy0, 
+                double *Exy1, double *Ezy1, 
+                double *Exz0, double *Eyz0, 
+                double *Exz1, double *Eyz1,
+                double dt
+        );
+        
 
         void determine_OMP_thread_role_in_MPI_communication(
             int omp_thread_id /* omp_get_thread_num()*/,
@@ -42,6 +64,8 @@ class AlgoElectro_NEW{
             size_t * /*size_of_sent_vector*/,
             size_t * /*size_of_recv_vector*/
         );
+
+        bool SteadyStateAnalyser(void);
 
 };
 

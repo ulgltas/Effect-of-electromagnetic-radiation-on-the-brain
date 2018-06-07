@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstring>
 #include <algorithm>
-
+#include <numeric>
 #include <limits.h>
 #include <float.h>
 
@@ -301,7 +301,7 @@ double Materials::get_mean_prop_from_dir(std::string const &mat, std::string con
 				format_vector_double(found_values).c_str(),
 				ANSI_COLOR_RESET
 			);
-		return accumulate( found_values.begin(), found_values.end(), 0.0)/found_values.size();
+		return std::accumulate( found_values.begin(), found_values.end(), 0.0)/found_values.size();
 	}else if(found_values.size() == 1){
 		return found_values[0];
 	}

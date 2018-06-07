@@ -42,11 +42,14 @@ endif()
 # MUMPS -- 
 SET(MUMPSDIR /home/users/r/t/rtoma/src/MUMPS_5.1.2)
 set(METIS_INCLUDE_DIR /home/users/r/t/rtoma/local/include)
-set(METIS_LIBRARIES /home/users/r/t/rtoma/local/lib/libparmetis.a /home/users/r/t/rtoma/local/lib/libmetis.a)
+#set(METIS_LIBRARIES /home/users/r/t/rtoma/local/lib/libparmetis.a /home/users/r/t/rtoma/local/lib/libmetis.a)
 #SET(MUMPSDIR $ENV{HOME}/MUMPS_5.1.2)
 #SET(MUMPSDIR /home/boman/src/mumps-5.1.2)
 #SET(MUMPSDIR C:/mingw-w64/src/mumps-5.1.2)
-
+find_library(PARMETISLIB  parmetis)
+find_library(METISLIB  metis)
+set(METIS_LIBRARIES ${PARMETISLIB} ${METISLIB})
+message(STATUS "METIS_LIBRARIES == ${METIS_LIBRARIES}")
 
 find_path(MUMPS_INCLUDE_DIRS NAMES "dmumps_c.h" PATHS ${MUMPSDIR}/include NO_SYSTEM_ENVIRONMENT_PATH)
 message(STATUS "MUMPS_INCLUDE_DIRS=" ${MUMPS_INCLUDE_DIRS})
@@ -72,9 +75,9 @@ target_link_libraries(TEST_MUMPS ${DMUMPSLIB} ${COMMONLIB} ${PORDLIB} ${METIS_LI
 #target_link_libraries(TEST_MUMPS -pthread -I/usr/lib/openmpi/lib -Wl,-rpath -Wl,/usr/lib/openmpi/lib -Wl,--enable-new-dtags -L/usr/lib/openmpi/lib -lmpi_usempif08 -lmpi_usempi_ignore_tkr -lmpi_mpifh -lmpi)
 
 # nic4
-target_link_libraries(TEST_MUMPS -lgfortran)
-target_link_libraries(TEST_MUMPS  $ENV{MKLROOT}/lib/intel64/libmkl_scalapack_lp64.a -Wl,--start-group $ENV{MKLROOT}/lib/intel64/libmkl_gf_lp64.a $ENV{MKLROOT}/lib/intel64/libmkl_gnu_thread.a $ENV{MKLROOT}/lib/intel64/libmkl_core.a $ENV{MKLROOT}/lib/intel64/libmkl_blacs_openmpi_lp64.a -Wl,--end-group -lgomp -lpthread -lm -ldl)
-target_link_libraries(TEST_MUMPS -pthread -I/cm/shared/apps/openmpi/1.6.4/gcc-4.9.2/lib -L/cm/shared/apps/openmpi/1.6.4/gcc-4.9.2/lib -lmpi_f90 -lmpi_f77 -lmpi -losmcomp -lrdmacm -libverbs -lrt -lnsl -lutil -lm -lpsm_infinipath -ldl -lm -lnuma -Wl,--export-dynamic -lrt -lnsl -lutil -lm -ldl)
+#target_link_libraries(TEST_MUMPS -lgfortran)
+#target_link_libraries(TEST_MUMPS  $ENV{MKLROOT}/lib/intel64/libmkl_scalapack_lp64.a -Wl,--start-group $ENV{MKLROOT}/lib/intel64/libmkl_gf_lp64.a $ENV{MKLROOT}/lib/intel64/libmkl_gnu_thread.a $ENV{MKLROOT}/lib/intel64/libmkl_core.a $ENV{MKLROOT}/lib/intel64/libmkl_blacs_openmpi_lp64.a -Wl,--end-group -lgomp -lpthread -lm -ldl)
+#target_link_libraries(TEST_MUMPS -pthread -I/cm/shared/apps/openmpi/1.6.4/gcc-4.9.2/lib -L/cm/shared/apps/openmpi/1.6.4/gcc-4.9.2/lib -lmpi_f90 -lmpi_f77 -lmpi -losmcomp -lrdmacm -libverbs -lrt -lnsl -lutil -lm -lpsm_infinipath -ldl -lm -lnuma -Wl,--export-dynamic -lrt -lnsl -lutil -lm -ldl)
 
 
 
@@ -89,8 +92,31 @@ target_link_libraries(TEST_MUMPS -pthread -I/cm/shared/apps/openmpi/1.6.4/gcc-4.
 #target_link_libraries(TEST_MUMPS  "C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/x64/msmpi.lib")
 #target_link_libraries(TEST_MUMPS  "-lgfortran")
 
+# MKL libs ------------------
+MESSAGE("Looking for MKL...")
+set(MKL_LIBRARIES "")
 
+IF(MINGW)
+    # static link, otherwise mkl_scalapack_intelmpi_lp64 called at runtime when metis is used
+    SET(_MKL_LIBSET mkl_scalapack_lp64 mkl_intel_lp64 mkl_intel_thread mkl_core mkl_blacs_msmpi_lp64  libiomp5md)
+ELSE()
+    SET(_MKL_LIBSET mkl_scalapack_lp64 mkl_gf_lp64 mkl_gnu_thread mkl_core mkl_blacs_openmpi_lp64)
+ENDIF()
+
+foreach(LIB ${_MKL_LIBSET})
+    find_library(FOUND_LIB ${LIB} PATHS $ENV{MKLROOT}/lib/intel64)
+    MESSAGE(STATUS "${LIB}=${FOUND_LIB}")
+    if(FOUND_LIB)
+        list(APPEND MKL_LIBRARIES ${FOUND_LIB})
+    endif()
+    unset(FOUND_LIB CACHE)
+endforeach()
+
+# start-group/end-group permet de resoudreles dependances circulaires lors d'un link statique (mingw)
+target_link_libraries(TEST_MUMPS -Wl,--start-group ${MKL_LIBRARIES} -Wl,--end-group )
 
 
 # common
 target_link_libraries(TEST_MUMPS ${MPI_LIBRARIES})
+
+

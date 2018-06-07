@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <cmath>
+#include <numeric>
 
 #include <stdio.h>
 
@@ -87,8 +88,8 @@ int main(int argc, char *argv[]){
         printf(">>> Spatial steps are not equal.\n");
         printf(">>> deltas(%.10lf,%.10lf,%.10lf)\n",data_step[0],data_step[1],data_step[2]);
         printf(">>> I take the mean, which is %.10lf.\n",
-            accumulate( data_step.begin(), data_step.end(), 0.0)/data_step.size()); 
-        double mean = accumulate( data_step.begin(), data_step.end(), 0.0)/data_step.size();
+            std::accumulate( data_step.begin(), data_step.end(), 0.0)/data_step.size()); 
+        double mean = std::accumulate( data_step.begin(), data_step.end(), 0.0)/data_step.size();
         data_step[0] = mean;
         data_step[1] = mean;
         data_step[2] = mean;
